@@ -1,6 +1,8 @@
-import React , { useState }from 'react'
+import { useState }from 'react'
 import { Calendar } from 'react-big-calendar'
 import { localizer , getMessages } from '../../helpers'
+import { useUiStore } from '../../hooks'
+
 
 import { addHours  } from 'date-fns'
 import { NavBar , CalendarEvent, CalendarModal } from "../"
@@ -20,6 +22,8 @@ const myEventsList =[{
 }]
 
 export const CalendarPage = () => {
+  const { openDateModal } = useUiStore();
+
   const [lastView, setLastView ] = useState(localStorage.getItem('lastView') || 'week');
 
   const eventStyleGetter = ( event , start, end, isSelected ) => { 
@@ -38,10 +42,11 @@ export const CalendarPage = () => {
 
   const onDoubleClick = ( event ) => {
     console.log({ doubleClick : event});  
+    openDateModal();
   }
 
   const onSelect = ( event ) => {
-    console.log({ click : event});  
+    // console.log({ click : event});  
   }
 
   const onViewChanged = ( event ) => {
