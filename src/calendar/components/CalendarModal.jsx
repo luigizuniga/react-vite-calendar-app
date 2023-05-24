@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { addHours } from 'date-fns'
+import { addHours, differenceInSeconds } from 'date-fns'
 import Modal from 'react-modal'
 import DatePicker, { registerLocale } from "react-datepicker"
 import es from 'date-fns/locale/es';
@@ -20,7 +20,8 @@ const customStyles = {
 }
 
 export const CalendarModal = () => {
-    const [isOpenModal, setIsOpenModal] = useState(true)
+    const [isOpenModal, setIsOpenModal] = useState(true);
+    // const [ formSubmitted, setFormSubmitted ] = useState(false);
 
     const [ formValues , setFormValues ] = useState({
         title: 'Luigi',
@@ -33,19 +34,37 @@ export const CalendarModal = () => {
         setFormValues({
             ...formValues,
             [ target.value ] : target.value
-        })
+        });
     }
 
     const onChangeDate = (event, changing ) => {
         setFormValues({
             ...formValues,
             [changing] : event
-        })
+        });
     }
 
     const onCloseModal = () => {
         // console.log({ onCloseModal })
-        setIsOpenModal(false)
+        setIsOpenModal(false);
+    }
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+        // setFormSubmitted(true);
+        const difference = differenceInSeconds( formValues.end, formValues.start);
+
+        if( isNaN(difference) || difference <= 0 ){
+            console.log('Revisar las fechas ingresadas');
+            return;
+        }
+
+        if( formValues.title.length <= 0 ) return;
+
+        console.log(formValues);
+
+        onCloseModal();
+        // setFormSubmitted(false);
     }
 
     Modal.setAppElement('#root')
@@ -62,11 +81,10 @@ export const CalendarModal = () => {
         >
             <h1> Nuevo evento </h1>
             <hr />
-            <form className="container">
+            <form onSubmit={ onSubmit } className="container">
 
                 <div className="form-group mb-2">
                     <label>Fecha y hora inicio</label>
-                    {/* <input className="form-control" placeholder="Fecha inicio" /> */}
                     <DatePicker 
                         className="form-control" 
                         placeholder="Fecha inicio"
@@ -81,7 +99,6 @@ export const CalendarModal = () => {
 
                 <div className="form-group mb-2">
                     <label>Fecha y hora fin</label>
-                    {/* <input className="form-control" placeholder="Fecha inicio" /> */}
                     <DatePicker 
                         className="form-control" 
                         placeholder="Fecha Fin"
