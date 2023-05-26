@@ -11,13 +11,12 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 export const CalendarPage = () => {
 
   const { openDateModal } = useUiStore();
-  const { events } = useCalendarStore();
+  const { events, setActiveEvent } = useCalendarStore();
 
   const [lastView, setLastView ] = useState(localStorage.getItem('lastView') || 'week');
 
   const eventStyleGetter = ( event , start, end, isSelected ) => { 
     
-
     const style = {
       backgroundColor: '#347CF7',
       borderRadius: '0px',
@@ -35,6 +34,7 @@ export const CalendarPage = () => {
 
   const onSelect = ( event ) => {
     // console.log({ click : event});  
+    setActiveEvent( event );
   }
 
   const onViewChanged = ( event ) => {
