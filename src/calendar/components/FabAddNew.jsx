@@ -1,6 +1,4 @@
-import React from 'react'
 import { useCalendarStore, useUiStore } from '../../hooks'
-import { onSetActiveEvent } from '../../store';
 import { addHours } from 'date-fns';
 
 export const FabAddNew = () => {

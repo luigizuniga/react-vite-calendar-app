@@ -1,4 +1,4 @@
-import React, { useState , useMemo } from 'react'
+import { useState , useMemo , useEffect} from 'react'
 import { addHours, differenceInSeconds } from 'date-fns'
 
 import Swal from 'sweetalert2';
@@ -11,7 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import es from 'date-fns/locale/es';
 import { useCalendarStore, useUiStore } from '../../hooks';
-import { useEffect } from 'react';
+
 
 registerLocale('es', es);
 
@@ -26,11 +26,11 @@ const customStyles = {
     }
 }
 
+Modal.setAppElement('#root')
+
 export const CalendarModal = () => {
     const { isDateModalOpen, closeDateModal } = useUiStore();
-    const { activeEvent } = useCalendarStore();
-
-    // const [isOpenModal, setIsOpenModal] = useState(true);
+    const { activeEvent , startSavingEvent } = useCalendarStore();
     
     const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -57,7 +57,7 @@ export const CalendarModal = () => {
     const onInputChange = ({ target }) => {
         setFormValues({
             ...formValues,
-            [target.value]: target.value
+            [target.name]: target.value
         });
     }
 
@@ -68,8 +68,9 @@ export const CalendarModal = () => {
         });
     }
 
-    const onSubmit = (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault();
+
         setFormSubmitted(true);
 
         const difference = differenceInSeconds(formValues.end, formValues.start);
@@ -81,18 +82,16 @@ export const CalendarModal = () => {
 
         if (formValues.title.length <= 0) return;
 
-        // onCloseModal();
-        closeDateModal();
+        await startSavingEvent( formValues );
 
+        closeDateModal();
+        
         setFormSubmitted(false);
     }
 
     const onCloseModal = () => {
-        // setIsOpenModal(false);
         closeDateModal();
     }
-
-    Modal.setAppElement('#root')
 
     return (
         <Modal
@@ -173,7 +172,6 @@ export const CalendarModal = () => {
                 </button>
 
             </form>
-
         </Modal>
     )
 }

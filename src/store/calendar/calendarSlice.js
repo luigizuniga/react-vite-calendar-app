@@ -33,6 +33,7 @@ export const calendarSlice = createSlice ({
                 if(event._id === payload._id) {
                     return payload;
                 }
+                return event;
             });
         },
         onDeleteEvent: ( state ) => {
