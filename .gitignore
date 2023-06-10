@@ -14,6 +14,9 @@ package-lock.json
 *.local
 *.DS_Store
 
+# env variable
+*.env
+
 # Editor directories and files
 .vscode/*
 .eslintrc.cjs
