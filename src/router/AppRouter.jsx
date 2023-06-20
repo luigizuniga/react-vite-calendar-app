@@ -6,11 +6,10 @@ import { getEnvVariables } from "../helpers";
 export const AppRouter = () => {
 
  // status = 'authenticated'; // 'not-authenticated';
-  const authStatus = "authenticated"; 
+  const authStatus = "not-authenticated"; 
 
   const enVar = getEnvVariables();
   console.log(enVar);
-  
   
   return (
         <Routes>
