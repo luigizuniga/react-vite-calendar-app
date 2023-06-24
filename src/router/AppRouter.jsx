@@ -11,14 +11,13 @@ export const AppRouter = () => {
   const enVar = getEnvVariables();
   console.log(enVar);
   
-  return (
-        <Routes>
-            {
-                ( authStatus === 'authenticated')
-                ?   <Route path="/auth/*" element={ <LoginPage />}/>
-                :   <Route path="/*" element={ <CalendarPage />}/>
+  return(
+    <Routes>
+      {( authStatus === 'not-authenticated') 
+                ? <Route path="/auth/*" element={ <LoginPage />}/> 
+                : <Route path="/*" element={ <CalendarPage />}/>
             }
-            <Route path="/*" element={ <Navigate to="/auth/login" /> }/>
-        </Routes>
+      <Route path="/*" element={ <Navigate to="/auth/login" />}/> 
+    </Routes>
   )
-}
+};
