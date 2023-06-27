@@ -1,4 +1,6 @@
-import { useForm } from '../../hooks';
+import { useEffect } from 'react';
+import { useAuthStore, useForm } from '../../hooks';
+import Swal from 'sweetalert2';
 
 import './LoginPage.css';
 
@@ -10,30 +12,36 @@ const loginFormFields = {
 const registerFormFields = {
     registerName: '',
     registerEmail: '',
-    registerPasword: '',
-    registerRepeatPasword: ''
+    registerPassword: '',
+    registerRepeatPassword: ''
 }
 
 export const LoginPage = () => {
+    const { startLogin , startRegister, errorMessage } = useAuthStore();
     const { loginEmail, loginPassword, onInputChange:onLoginInputChange } = useForm( loginFormFields );
-    const { registerName, registerEmail, registerPasword, registerRepeatPasword, onInputChange:onRegisterInputChange} = useForm( registerFormFields );
+    const { registerName, registerEmail, registerPassword, registerRepeatPassword, onInputChange:onRegisterInputChange} = useForm( registerFormFields );
     
     const loginSubmit = ( event ) => {
         event.preventDefault();
-        console.log({  email: loginEmail, password: loginPassword });
+        startLogin({ email: loginEmail, password: loginPassword });
     };
    
     const registerOnSubmit = ( event ) => {
         event.preventDefault();
-        console.log({ name: registerName, email: registerEmail, password: registerPasword, repeat_password: registerRepeatPasword });
-
-        if ( registerPasword !== registerRepeatPasword ) {
-            // Swal.fire('Error en registro', 'Contraseñas no son iguales', 'error');
-            console.log('Error en registro', 'Contraseñas no son iguales', 'error');
+        if ( registerPassword !== registerRepeatPassword ) {
+            Swal.fire('Error en registro', 'Contraseñas no son iguales', 'error');
             return;
-        }
+        };
+        // console.log({ name: registerName, email: registerEmail, password: registerPassword, repeat_password: registerRepeatPassword });
+        startRegister({ name: registerName ,email: registerEmail, password: registerPassword });
     };
 
+    useEffect(() => {
+      if( errorMessage !== undefined ){
+        Swal.fire('Error de Autentificacion', errorMessage, 'error');
+      }
+    }, [errorMessage])
+    
     return (
         <div className="container login-container">
             <div className="row">
@@ -58,6 +66,7 @@ export const LoginPage = () => {
                                 name="loginPassword"
                                 value={ loginPassword }
                                 onChange={ onLoginInputChange }
+                                autoComplete='on'
                             />
                         </div>
                         <div className="d-grid gap-2">
@@ -91,27 +100,30 @@ export const LoginPage = () => {
                                 type="email"
                                 className="form-control"
                                 placeholder="Correo"
+                                autoComplete='off'
                             />
                         </div>
                         <div className="form-group mb-2">
                             <input
-                                name="registerPasword"
-                                value={ registerPasword }
+                                name="registerPassword"
+                                value={ registerPassword }
                                 onChange={ onRegisterInputChange }
                                 type="password"
                                 className="form-control"
                                 placeholder="Contraseña" 
+                                autoComplete='off'
                             />
                         </div>
 
                         <div className="form-group mb-2">
                             <input
-                                name="registerRepeatPasword"
-                                value={ registerRepeatPasword }
+                                name="registerRepeatPassword"
+                                value={ registerRepeatPassword }
                                 onChange={ onRegisterInputChange }
                                 type="password"
                                 className="form-control"
-                                placeholder="Repita la contraseña" 
+                                placeholder="Repita la contraseña"
+                                autoComplete='off'
                             />
                         </div>
 

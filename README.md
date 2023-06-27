@@ -7,5 +7,5 @@
 2. Hacer los cambios respectivos en las variables de entorno
 
 ```bash
-VITE_API_URL = 'localhost:4000/api/auth';
+VITE_API_URL = 'localhost:4000/api';
 ```

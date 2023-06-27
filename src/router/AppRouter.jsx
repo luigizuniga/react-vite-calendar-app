@@ -4,12 +4,12 @@ import { CalendarPage } from "../calendar"
 import { getEnvVariables } from "../helpers";
 
 export const AppRouter = () => {
-
  // status = 'authenticated'; // 'not-authenticated';
   const authStatus = "not-authenticated"; 
 
   const enVar = getEnvVariables();
   console.log(enVar);
+  console.log(authStatus);
   
   return(
     <Routes>
