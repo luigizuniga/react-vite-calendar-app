@@ -16,13 +16,12 @@ export const useCalendarStore = () => {
     const startSavingEvent = async( calendarEvent ) => {
         try {
             if( calendarEvent.id ){
-                // ** Update event
-                // await calendarApi.put('http://localhost:4000/api/events/' + calendarEvent.id, calendarEvent);
-                // dispatch( onUpdateEvent({ ...calendarEvent , user }));
-                // return;
-                dispatch( onUpdateEvent({ ...calendarEvent }));
+                // ** Update onUpdateEvent
+                await calendarApi.put(`http://localhost:4000/api/events/${ calendarEvent.id }`, calendarEvent);
+                dispatch( onUpdateEvent({ ...calendarEvent , user }));
+                return;
             }else{
-                // Create event
+                // Create onAddNewEvent
                 const { data } = await calendarApi.post('http://localhost:4000/api/events', calendarEvent );  
                 dispatch( onAddNewEvent({ ...calendarEvent, id : data.event.id, user  }));
             }
@@ -32,16 +31,21 @@ export const useCalendarStore = () => {
         }
     }
 
-    const startDeleteEvent = () => {
-        dispatch( onDeleteEvent() );
+    const startDeleteEvent = async () => {
+        try {
+            await calendarApi.delete(`http://localhost:4000/api/events/${ activeEvent.id }`);
+            dispatch( onDeleteEvent() );
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error al eliminar evento', error.response.data.msg, 'error');
+        }
     }
 
     const startLoadingEvents = async() => {
         try{
             const { data } = await calendarApi.get('http://localhost:4000/api/events');
-            console.log(data);
-            // const events = convertEventsToDateEvents(data.events);
-            // dispatch( onLoadEvents(events));
+            const events = convertEventsToDateEvents(data.events);
+            dispatch( onLoadEvents(events));
         }catch(error){
             console.log('Error al cargar los eventos');
             console.log(error);
